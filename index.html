@@ -12,8 +12,19 @@
     --font: "Arial","Tahoma",system-ui,-apple-system,"Segoe UI";
     --border: 1px solid #333;
     --inner-pad: 15mm;
+
+    /* مساحات أمان للقالب */
+    --safe-top: 40mm;
+    --safe-right: 25mm;
+    --safe-left: 25mm;
+    --safe-bottom: 25mm;
   }
-  body{ font-family: var(--font); background:#f2f2f2; margin:0; padding:16px; }
+  body{
+    font-family: var(--font);
+    background:#f2f2f2;
+    margin:0;
+    padding:16px;
+  }
   .wrap{ display:grid; grid-template-columns: 360px 1fr; gap:16px; align-items:start; }
 
   /* لوحة الإدخال */
@@ -53,16 +64,19 @@
   }
   .page.template-on{
     background-color: transparent;
-    background-size: cover;
-    background-position: center;
+    background-image: url('template-bg.jpg'); /* القالب الافتراضي */
+    background-size: 100% 100%;
+    background-position: center top;
     background-repeat: no-repeat;
     border-color: #ccc;
   }
   .page-inner{
-    padding: var(--inner-pad);
+    padding: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left);
     position: relative;
     min-height: calc(var(--page-h) - (var(--inner-pad)*2));
   }
+
+  .page * { background-color: transparent; }
 
   .header{
     text-align:center; font-weight:700; font-size:20px; letter-spacing:.5px;
@@ -80,13 +94,12 @@
     display:inline-block; min-width:120px; border-bottom:1px solid #000; padding:0 6px;
   }
 
-  /* تذييل أسفل أقصى اليسار */
   .footer-left{
     position: absolute;
     left: var(--inner-pad);
     bottom: 65mm;
     font-size: 23px;
-    text-align: left; /* أقصى اليسار فعلياً */
+    text-align: left;
     white-space: pre-line;
   }
 
@@ -95,10 +108,10 @@
   /* إعدادات الطباعة */
   @page{ size: A4; margin: 0; }
   @media print{
-    body{ background:#fff; padding:0; }
+    body{ background:#fff; padding:0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     .panel, .actions{ display:none !important; }
     .page{ border:none; box-shadow:none; }
-    .page-inner{ padding: var(--inner-pad); }
+    .page-inner{ padding: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left); }
     a{ display:none; }
   }
 </style>
@@ -112,7 +125,7 @@
 
     <div class="row">
       <div style="flex:1">
-        <label>اسم الخطاب  (العنوان العلوي)</label>
+        <label>اسم الخطاب (العنوان العلوي)</label>
         <input id="org" value="انتداب" />
       </div>
     </div>
@@ -155,7 +168,7 @@
 
     <hr style="margin:10px 0" />
 
-    <label>بيانات المكلفين (يمكن إضافة أكثر من شخص)</label>
+    <label>بيانات المكلفين</label>
     <table class="mini" id="peopleTable">
       <thead>
         <tr>
@@ -179,31 +192,18 @@
 
     <hr style="margin:10px 0" />
 
-    <div class="row" style="align-items:center">
-      <div style="flex:1">
-        <label>صورة القالب (JPG/PNG) للطباعة فوقها</label>
-        <input id="tplFile" type="file" accept="image/*" />
-      </div>
-    </div>
-    <div class="row" style="align-items:center">
-      <label style="display:flex; gap:8px; align-items:center">
-        <input id="tplToggle" type="checkbox" />
-        تفعيل الطباعة فوق القالب
-      </label>
-    </div>
-
     <div class="actions">
       <button class="btn secondary" type="button" onclick="addRow()">+ إضافة مكلف</button>
       <button class="btn" type="button" onclick="updatePreview()">تحديث المعاينة</button>
       <button class="btn" type="button" onclick="window.print()">طباعة الخطاب</button>
     </div>
     <div class="muted" style="margin-top:6px">
-      ملاحظة: عند الطباعة اختر A4 و"بدون هوامش" قدر الإمكان. اضبط قيمة الحواف من CSS إذا احتجت محاذاة أدق.
+      ملاحظة: عند الطباعة اختر A4 و"بدون هوامش" قدر الإمكان.
     </div>
   </section>
 
   <!-- صفحة الخطاب -->
-  <section class="page" id="page" aria-label="معاينة خطاب التكليف">
+  <section class="page template-on" id="page" aria-label="معاينة خطاب التكليف">
     <div class="page-inner" id="printArea">
       <div class="header" id="orgOut">مستشفى الموسم العام</div>
 
@@ -228,50 +228,25 @@
 
       <div class="letter-body" id="letterBody">
         <p>السلام عليكم ورحمة الله وبركاته وبعد،</p>
-
-        <p>
-          نُكَلِّفُكم بالتوجّه مُنتدَبًا (منتدبين) للذهاب إلى:
-          <span class="field-underline" id="destOut">&nbsp;</span>
-        </p>
-
-        <p>
-          وذلك لغرض:
-          <span class="field-underline" id="purposeOut">&nbsp;</span>
-        </p>
-
-        <p>
-          لمدة:
-          <span class="field-underline" id="durationOut">&nbsp;</span>
-        </p>
-
-        <p>
-          من تاريخ
-          <span class="field-underline" id="startOut">&nbsp;</span>
-          وحتى تاريخ
-          <span class="field-underline" id="endOut">&nbsp;</span>
-          .
-        </p>
-
-        <p>
-          مَعَ تقديم اللازم والشهادة بعد الانتهاء من هذه المهمة.
-        </p>
+        <p>نُكَلِّفُكم بالتوجّه مُنتدَبًا للذهاب إلى: <span class="field-underline" id="destOut">&nbsp;</span></p>
+        <p>وذلك لغرض: <span class="field-underline" id="purposeOut">&nbsp;</span></p>
+        <p>لمدة: <span class="field-underline" id="durationOut">&nbsp;</span></p>
+        <p>من تاريخ <span class="field-underline" id="startOut">&nbsp;</span>
+        وحتى تاريخ <span class="field-underline" id="endOut">&nbsp;</span>.</p>
+        <p>مَعَ تقديم اللازم والشهادة بعد الانتهاء من هذه المهمة.</p>
       </div>
 
-      <!-- التذييل المطلوب أسفل أقصى يسار الصفحة -->
       <div class="footer-left" id="footerLeft">
         مدير مستشفى الموسم العام
-        <br/>
-        أ. احمد محمد يوسف دغريري
+        <br/>أ. احمد محمد يوسف دغريري
       </div>
 
-      <!-- حقل ملاحظات عام أسفل الصفحة (اختياري) -->
       <div class="muted" style="position:absolute; right: var(--inner-pad); bottom: 10mm;" id="noteOut"></div>
     </div>
   </section>
 </div>
 
 <script>
-  // إعادة ترقيم الصفوف
   function renumber(){
     document.querySelectorAll('#peopleTable tbody tr .index').forEach((td, i)=> td.textContent = i+1);
   }
@@ -283,14 +258,12 @@
       <td><input placeholder="الاسم الثلاثي" /></td>
       <td><input placeholder="مثال: 123456" /></td>
       <td><input placeholder="سعودي" /></td>
-      <td><button class="btn danger" type="button" onclick="removeRow(this)">✕</button></td>
-    `;
+      <td><button class="btn danger" type="button" onclick="removeRow(this)">✕</button></td>`;
     tbody.appendChild(tr);
     renumber();
   }
   function removeRow(btn){
-    const tr = btn.closest('tr');
-    tr.parentNode.removeChild(tr);
+    btn.closest('tr').remove();
     renumber();
   }
   function toSafe(value){ return (value || "").trim(); }
@@ -305,83 +278,43 @@
     }catch(e){ return val; }
   }
 
-  // تحميل صورة القالب واستخدامها كخلفية
-  const tplFile = document.getElementById('tplFile');
-  const tplToggle = document.getElementById('tplToggle');
   const page = document.getElementById('page');
-  let tplDataUrl = null;
-
-  tplFile.addEventListener('change', (e)=>{
-    const file = e.target.files && e.target.files[0];
-    if(!file) return;
-    const reader = new FileReader();
-    reader.onload = ()=>{
-      tplDataUrl = reader.result;
-      if(tplToggle.checked){
-        page.style.backgroundImage = `url('${tplDataUrl}')`;
-      }
-    };
-    reader.readAsDataURL(file);
-  });
-
-  tplToggle.addEventListener('change', ()=>{
-    page.classList.toggle('template-on', tplToggle.checked);
-    if(tplToggle.checked && tplDataUrl){
-      page.style.backgroundImage = `url('${tplDataUrl}')`;
-    }else{
-      page.style.backgroundImage = 'none';
-    }
-  });
 
   function updatePreview(){
-    // رأس الصفحة
     document.getElementById('orgOut').textContent = toSafe(document.getElementById('org').value);
-
-    // جدول المكلفين
     const outBody = document.querySelector('#tableOut tbody');
     outBody.innerHTML = '';
-    const rows = document.querySelectorAll('#peopleTable tbody tr');
-    if(rows.length === 0){
+    document.querySelectorAll('#peopleTable tbody tr').forEach((r, i)=>{
+      const tds = r.querySelectorAll('td');
+      const name = toSafe(tds[1].querySelector('input').value);
+      const emp  = toSafe(tds[2].querySelector('input').value);
+      const nat  = toSafe(tds[3].querySelector('input').value);
       const tr = document.createElement('tr');
-      tr.innerHTML = `<td>1</td><td>—</td><td>—</td><td>—</td>`;
+      tr.innerHTML = `<td>${i+1}</td><td>${name||'—'}</td><td>${emp||'—'}</td><td>${nat||'—'}</td>`;
       outBody.appendChild(tr);
-    }else{
-      rows.forEach((r, i)=>{
-        const tds = r.querySelectorAll('td');
-        const name = toSafe(tds[1].querySelector('input').value);
-        const emp  = toSafe(tds[2].querySelector('input').value);
-        const nat  = toSafe(tds[3].querySelector('input').value);
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${i+1}</td>
-          <td>${name || '—'}</td>
-          <td>${emp  || '—'}</td>
-          <td>${nat  || '—'}</td>
-        `;
-        outBody.appendChild(tr);
-      });
-    }
-
-    // نص الخطاب
-    document.getElementById('destOut').textContent     = toSafe(document.getElementById('destination').value);
-    document.getElementById('purposeOut').textContent   = toSafe(document.getElementById('purpose').value);
-    document.getElementById('durationOut').textContent  = toSafe(document.getElementById('duration').value) ? toSafe(document.getElementById('duration').value) + ' يوم' : '';
-    document.getElementById('startOut').textContent     = formatDate(document.getElementById('start').value);
-    document.getElementById('endOut').textContent       = formatDate(document.getElementById('end').value);
-
-    // ملاحظة أسفل الصفحة (يمين)
-    const note = toSafe(document.getElementById('note').value);
-    document.getElementById('noteOut').textContent = note;
+    });
+    document.getElementById('destOut').textContent = toSafe(document.getElementById('destination').value);
+    document.getElementById('purposeOut').textContent = toSafe(document.getElementById('purpose').value);
+    const dur = toSafe(document.getElementById('duration').value);
+    document.getElementById('durationOut').textContent = dur ? dur+' يوم' : '';
+    document.getElementById('startOut').textContent = formatDate(document.getElementById('start').value);
+    document.getElementById('endOut').textContent = formatDate(document.getElementById('end').value);
+    document.getElementById('noteOut').textContent = toSafe(document.getElementById('note').value);
   }
 
-  // تحديث أولي
-  updatePreview();
-
-  // تحديث فوري عند التغيير
   document.querySelectorAll('.panel input, .panel textarea, .panel select').forEach(el=>{
     el.addEventListener('input', updatePreview);
     el.addEventListener('change', updatePreview);
   });
+
+  // ✅ تفعيل القالب الافتراضي template-bg.jpg تلقائيًا
+  window.addEventListener('DOMContentLoaded', ()=>{
+    const defaultImg = new Image();
+    defaultImg.onload = ()=>{ page.classList.add('template-on'); };
+    defaultImg.src = 'template-bg.jpg';
+  });
+
+  updatePreview();
 </script>
 
 </body>
