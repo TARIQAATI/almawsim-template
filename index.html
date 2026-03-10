@@ -1,321 +1,90 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>نموذج خطاب تكليف مهمة - الطباعة على قالب المستشفى</title>
-<style>
-  :root{
-    --page-w: 210mm;
-    --page-h: 297mm;
-    --page-margin: 15mm;
-    --font: "Arial","Tahoma",system-ui,-apple-system,"Segoe UI";
-    --border: 1px solid #333;
-    --inner-pad: 15mm;
-
-    /* مساحات أمان للقالب */
-    --safe-top: 40mm;
-    --safe-right: 25mm;
-    --safe-left: 25mm;
-    --safe-bottom: 25mm;
-  }
-  body{
-    font-family: var(--font);
-    background:#f2f2f2;
-    margin:0;
-    padding:16px;
-  }
-  .wrap{ display:grid; grid-template-columns: 360px 1fr; gap:16px; align-items:start; }
-
-  /* لوحة الإدخال */
-  .panel{
-    background:#fff; border: var(--border); border-radius:8px; padding:14px;
-    position:sticky; top:16px;
-  }
-  .panel h2{ margin:0 0 10px; font-size:18px; }
-  .panel .row{ display:flex; gap:8px; margin-bottom:8px; }
-  .panel label{ font-size:14px; display:block; margin-bottom:4px; }
-  .panel input, .panel textarea, .panel select{
-    width:100%; padding:8px; border:1px solid #aaa; border-radius:6px; font-family:var(--font);
-  }
-  .small{ width:120px; }
-  .actions{ display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
-  .btn{
-    border:1px solid #333; background:#111; color:#fff; padding:10px 12px;
-    border-radius:8px; cursor:pointer; font-size:14px;
-  }
-  .btn.secondary{ background:#fff; color:#111; }
-  .btn.danger{ background:#b00020; border-color:#b00020; }
-
-  /* جدول الموظفين */
-  table.mini{ width:100%; border-collapse:collapse; font-size:14px; margin-top:6px; }
-  table.mini th, table.mini td{ border:1px solid #bbb; padding:6px; text-align:center; }
-  table.mini input{ width:100%; padding:6px; border:1px solid #bbb; border-radius:4px; }
-
-  /* صفحة الخطاب */
-  .page{
-    width: var(--page-w);
-    min-height: var(--page-h);
-    margin: 0 auto;
-    background:#fff; border: var(--border); border-radius:4px;
-    position: relative;
-    box-shadow: 0 0 0.5mm rgba(0,0,0,.08);
-    overflow: hidden;
-  }
-  .page.template-on{
-    background-color: transparent;
-    background-image: url('template-bg.jpg'); /* القالب الافتراضي */
-    background-size: 100% 100%;
-    background-position: center top;
-    background-repeat: no-repeat;
-    border-color: #ccc;
-  }
-  .page-inner{
-    padding: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left);
-    position: relative;
-    min-height: calc(var(--page-h) - (var(--inner-pad)*2));
-  }
-
-  .page * { background-color: transparent; }
-
-  .header{
-    text-align:center; font-weight:700; font-size:20px; letter-spacing:.5px;
-    margin-bottom:14px;
-  }
-  .info-table{
-    width:100%; border-collapse:collapse; margin:10px 0 14px;
-    font-size:14px;
-  }
-  .info-table th, .info-table td{
-    border:1px solid #000; padding:8px; text-align:center;
-  }
-  .letter-body{ font-size:16px; line-height:1.9; }
-  .field-underline{
-    display:inline-block; min-width:120px; border-bottom:1px solid #000; padding:0 6px;
-  }
-
-  .footer-left{
-    position: absolute;
-    left: var(--inner-pad);
-    bottom: 65mm;
-    font-size: 23px;
-    text-align: left;
-    white-space: pre-line;
-  }
-
-  .muted{ color:#444; }
-
-  /* إعدادات الطباعة */
-  @page{ size: A4; margin: 0; }
-  @media print{
-    body{ background:#fff; padding:0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-    .panel, .actions{ display:none !important; }
-    .page{ border:none; box-shadow:none; }
-    .page-inner{ padding: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left); }
-    a{ display:none; }
-  }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Template</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script>
+        function openPreviewModal() {
+            document.getElementById('previewModal').style.display = 'block';
+        }
+        
+        function closeModal() {
+            document.getElementById('previewModal').style.display = 'none';
+        }
+        
+        function savePDF() {
+            const element = document.getElementById('documentToExport');
+            html2pdf(element);
+        }
+        
+        function printDocument() {
+            window.print();
+        }
+    </script>
 </head>
 <body>
-
-<div class="wrap">
-  <!-- لوحة الإدخال -->
-  <section class="panel" aria-label="لوحة إدخال بيانات الخطاب">
-    <h2>نموذج الإدخال</h2>
-
-    <div class="row">
-      <div style="flex:1">
-        <label>اسم الخطاب (العنوان العلوي)</label>
-        <input id="org" value="انتداب" />
-      </div>
+    <div class="container">
+        <div class="left-panel" style="position: sticky; top: 0;">
+            <form>
+                <!-- Input form fields go here -->
+                <input type="text" placeholder="Your Name">
+                <input type="email" placeholder="Your Email">
+                <button type="button" onclick="openPreviewModal()">Preview Document</button>
+            </form>
+        </div>
+        <div class="right-section">
+            <div id="previewModal" style="display:none;">
+                <div class="modal-content">
+                    <span class="close" style="cursor:pointer;" onclick="closeModal()">&times;</span>
+                    <h2>Document Preview</h2>
+                    <div id="documentToExport">
+                        <!-- Document content for preview goes here -->
+                    </div>
+                    <button onclick="printDocument()">Print</button>
+                    <button onclick="savePDF()">Save as PDF</button>
+                </div>
+            </div>
+        </div>
     </div>
-
-    <div class="row">
-      <div style="flex:1">
-        <label>الوجهة (الذهاب إلى)</label>
-        <input id="destination" placeholder="مثال: مركز صحي ..." />
-      </div>
-    </div>
-
-    <div class="row">
-      <div style="flex:1">
-        <label>الغرض</label>
-        <input id="purpose" placeholder="مثال: تغطية عمل/استلام عهدة/مشاركة ..." />
-      </div>
-    </div>
-
-    <div class="row">
-      <div>
-        <label>المدة (بالأيام)</label>
-        <input id="duration" type="number" min="1" class="small" placeholder="مثال: 3" />
-      </div>
-      <div>
-        <label>من تاريخ</label>
-        <input id="start" type="date" class="small" />
-      </div>
-      <div>
-        <label>حتى تاريخ</label>
-        <input id="end" type="date" class="small" />
-      </div>
-    </div>
-
-    <div class="row">
-      <div style="flex:1">
-        <label>ملاحظات أسفل الصفحة (اختياري)</label>
-        <input id="note" placeholder="تظهر بخط صغير أسفل الصفحة" />
-      </div>
-    </div>
-
-    <hr style="margin:10px 0" />
-
-    <label>بيانات المكلفين</label>
-    <table class="mini" id="peopleTable">
-      <thead>
-        <tr>
-          <th style="width:60px">م</th>
-          <th>الاسم</th>
-          <th style="width:130px">الرقم الوظيفي</th>
-          <th style="width:120px">الجنسية</th>
-          <th style="width:70px">حذف</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="index">1</td>
-          <td><input placeholder="الاسم الثلاثي" /></td>
-          <td><input placeholder="مثال: 123456" /></td>
-          <td><input placeholder="سعودي" /></td>
-          <td><button class="btn danger" type="button" onclick="removeRow(this)">✕</button></td>
-        </tr>
-      </tbody>
-    </table>
-
-    <hr style="margin:10px 0" />
-
-    <div class="actions">
-      <button class="btn secondary" type="button" onclick="addRow()">+ إضافة مكلف</button>
-      <button class="btn" type="button" onclick="updatePreview()">تحديث المعاينة</button>
-      <button class="btn" type="button" onclick="window.print()">طباعة الخطاب</button>
-    </div>
-    <div class="muted" style="margin-top:6px">
-      ملاحظة: عند الطباعة اختر A4 و"بدون هوامش" قدر الإمكان.
-    </div>
-  </section>
-
-  <!-- صفحة الخطاب -->
-  <section class="page template-on" id="page" aria-label="معاينة خطاب التكليف">
-    <div class="page-inner" id="printArea">
-      <div class="header" id="orgOut">مستشفى الموسم العام</div>
-
-      <table class="info-table" id="tableOut">
-        <thead>
-          <tr>
-            <th style="width:60px">م</th>
-            <th>الاسم</th>
-            <th style="width:160px">الرقم الوظيفي</th>
-            <th style="width:140px">الجنسية</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>1</td>
-            <td>—</td>
-            <td>—</td>
-            <td>—</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <div class="letter-body" id="letterBody">
-        <p>السلام عليكم ورحمة الله وبركاته وبعد،</p>
-        <p>نُكَلِّفُكم بالتوجّه مُنتدَبًا للذهاب إلى: <span class="field-underline" id="destOut">&nbsp;</span></p>
-        <p>وذلك لغرض: <span class="field-underline" id="purposeOut">&nbsp;</span></p>
-        <p>لمدة: <span class="field-underline" id="durationOut">&nbsp;</span></p>
-        <p>من تاريخ <span class="field-underline" id="startOut">&nbsp;</span>
-        وحتى تاريخ <span class="field-underline" id="endOut">&nbsp;</span>.</p>
-        <p>مَعَ تقديم اللازم والشهادة بعد الانتهاء من هذه المهمة.</p>
-      </div>
-
-      <div class="footer-left" id="footerLeft">
-        مدير مستشفى الموسم العام
-        <br/>أ. احمد محمد يوسف دغريري
-      </div>
-
-      <div class="muted" style="position:absolute; right: var(--inner-pad); bottom: 10mm;" id="noteOut"></div>
-    </div>
-  </section>
-</div>
-
-<script>
-  function renumber(){
-    document.querySelectorAll('#peopleTable tbody tr .index').forEach((td, i)=> td.textContent = i+1);
-  }
-  function addRow(){
-    const tbody = document.querySelector('#peopleTable tbody');
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td class="index"></td>
-      <td><input placeholder="الاسم الثلاثي" /></td>
-      <td><input placeholder="مثال: 123456" /></td>
-      <td><input placeholder="سعودي" /></td>
-      <td><button class="btn danger" type="button" onclick="removeRow(this)">✕</button></td>`;
-    tbody.appendChild(tr);
-    renumber();
-  }
-  function removeRow(btn){
-    btn.closest('tr').remove();
-    renumber();
-  }
-  function toSafe(value){ return (value || "").trim(); }
-  function formatDate(val){
-    if(!val) return "";
-    try{
-      const d = new Date(val);
-      const yyyy = d.getFullYear();
-      const mm = String(d.getMonth()+1).padStart(2,'0');
-      const dd = String(d.getDate()).padStart(2,'0');
-      return `${dd}/${mm}/${yyyy}`;
-    }catch(e){ return val; }
-  }
-
-  const page = document.getElementById('page');
-
-  function updatePreview(){
-    document.getElementById('orgOut').textContent = toSafe(document.getElementById('org').value);
-    const outBody = document.querySelector('#tableOut tbody');
-    outBody.innerHTML = '';
-    document.querySelectorAll('#peopleTable tbody tr').forEach((r, i)=>{
-      const tds = r.querySelectorAll('td');
-      const name = toSafe(tds[1].querySelector('input').value);
-      const emp  = toSafe(tds[2].querySelector('input').value);
-      const nat  = toSafe(tds[3].querySelector('input').value);
-      const tr = document.createElement('tr');
-      tr.innerHTML = `<td>${i+1}</td><td>${name||'—'}</td><td>${emp||'—'}</td><td>${nat||'—'}</td>`;
-      outBody.appendChild(tr);
-    });
-    document.getElementById('destOut').textContent = toSafe(document.getElementById('destination').value);
-    document.getElementById('purposeOut').textContent = toSafe(document.getElementById('purpose').value);
-    const dur = toSafe(document.getElementById('duration').value);
-    document.getElementById('durationOut').textContent = dur ? dur+' يوم' : '';
-    document.getElementById('startOut').textContent = formatDate(document.getElementById('start').value);
-    document.getElementById('endOut').textContent = formatDate(document.getElementById('end').value);
-    document.getElementById('noteOut').textContent = toSafe(document.getElementById('note').value);
-  }
-
-  document.querySelectorAll('.panel input, .panel textarea, .panel select').forEach(el=>{
-    el.addEventListener('input', updatePreview);
-    el.addEventListener('change', updatePreview);
-  });
-
-  // ✅ تفعيل القالب الافتراضي template-bg.jpg تلقائيًا
-  window.addEventListener('DOMContentLoaded', ()=>{
-    const defaultImg = new Image();
-    defaultImg.onload = ()=>{ page.classList.add('template-on'); };
-    defaultImg.src = 'template-bg.jpg';
-  });
-
-  updatePreview();
-</script>
-
+    <style>
+        /* Responsive Design Improvements */
+        .container {
+            display: flex;
+        }
+        .left-panel {
+            flex: 1;
+            padding: 20px;
+            /* Add more styling as needed */
+        }
+        .right-section {
+            flex: 2;
+            padding: 20px;
+            /* Add more styling as needed */
+        }
+        .modal-content {
+            position: fixed;
+            z-index: 1;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border: 1px solid #888;
+            /* Add additional styles for modal */
+        }
+        button {
+            /* Improved button styling */
+            padding: 10px 15px;
+            margin: 5px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
 </body>
 </html>
